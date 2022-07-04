@@ -89,13 +89,20 @@ import Tree from 'primevue/tree';
 import TreeSelect from 'primevue/treeselect';
 import TreeTable from 'primevue/treetable';
 import TriStateCheckbox from 'primevue/tristatecheckbox';
+import axios from 'axios';
 import App from './App.vue';
 import router from './router';
+import store from './store';
 
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0);
   next();
 });
+
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
+axios.defaults.baseURL = 'http://127.0.0.1:8000/';
 
 const app = createApp(App);
 
@@ -103,6 +110,7 @@ app.use(PrimeVue, { ripple: true, inputStyle: 'outlined' });
 app.use(ConfirmationService);
 app.use(ToastService);
 app.use(router);
+app.use(store);
 
 app.directive('tooltip', Tooltip);
 app.directive('ripple', Ripple);

@@ -75,8 +75,9 @@
             </div>
 
             <div class="flex align-items-center justify-content-between mb-5">
-              <a class="font-medium no-underline ml-2 text-right cursor-pointer"
-                 style="color: var(--primary-color)">Mot de passe oublié ?</a>
+              <a class="font-medium no-underline ml-2 text-right cursor-pointer hover:underline">
+                Mot de passe oublié ?
+              </a>
             </div>
             <Button type="submit" label="Sign In"
                     class="w-full p-3 text-xl"></Button>
@@ -85,11 +86,13 @@
       </div>
     </div>
   </div>
+  <Toast />
 </template>
 
 <script>
 import { useVuelidate } from '@vuelidate/core';
 import { email, helpers, required } from '@vuelidate/validators';
+import { mapActions } from 'vuex';
 
 export default {
   setup() {
@@ -115,16 +118,28 @@ export default {
     };
   },
   methods: {
-    handleSubmit(isFormValid) {
+    ...mapActions(['LogIn']),
+    async handleSubmit(isFormValid) {
       this.submitted = true;
-      window.v$ = this.v$;
 
       if (!isFormValid) {
-        console.log('invalid');
         return;
       }
 
-      console.log('valid');
+      try {
+        await this.LogIn(this.$data);
+        await this.$router.push({ name: 'dashboard' });
+      } catch (error) {
+        const { response } = error;
+
+        if (response?.status === 400) {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Mot de passe ou e-mail incorrect',
+          });
+        }
+      }
     },
   },
 };
