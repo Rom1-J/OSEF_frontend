@@ -43,13 +43,13 @@
         <div class="flex justify-content-between lg:block border-top-1
         lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
           <template v-if="!isAuthenticated">
-            <router-link :to="{name: 'register'}" custom
+            <router-link :to="{name: 'login'}" custom
                          v-slot="{ navigate }">
               <Button label="Se connecter" @click="navigate"
                       class="p-button-text p-button-rounded border-none
                     font-light line-height-2 text-primary"></Button>
             </router-link>
-            <router-link :to="{name: 'login'}" custom
+            <router-link :to="{name: 'register'}" custom
                          v-slot="{ navigate }">
               <Button label="S'inscrire" @click="navigate"
                       class="p-button-rounded border-none ml-5 font-light
@@ -78,7 +78,7 @@
           Commencez dès maintenant à envoyer des fichiers de manière sécurisée
           à vos contacts !
         </p>
-        <router-link :to="{name: 'login'}" custom
+        <router-link :to="{name: 'register'}" custom
                      v-slot="{ navigate }" v-if="!isAuthenticated">
           <Button label="Inscrivez-vous" @click="navigate"
                   icon="pi pi-angle-double-right" iconPos="right"

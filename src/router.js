@@ -9,11 +9,18 @@ const routes = [
   },
   {
     path: '/dashboard',
-    name: 'dashboard',
-    component: () => import('./pages/Dashboard.vue'),
+    name: 'home',
+    component: () => import('./pages/Dashboard/App.vue'),
     meta: {
       requires_auth: true,
     },
+    children: [
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: () => import('./components/Dashboard.vue'),
+      },
+    ],
   },
   {
     path: '/register',
