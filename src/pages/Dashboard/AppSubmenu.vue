@@ -43,7 +43,7 @@
         </template>
       </li>
       <li class="p-menu-separator" :style="item.style"
-          v-if="visible(item) && item.separator" :key="'separator' + i"
+          v-if="visible(item) && item.separator" :key="`separator${i}`"
           role="separator"></li>
     </template>
   </ul>

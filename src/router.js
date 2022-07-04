@@ -11,16 +11,21 @@ const routes = [
     path: '/dashboard',
     name: 'home',
     component: () => import('./pages/Dashboard/App.vue'),
-    meta: {
-      requires_auth: true,
-    },
     children: [
       {
         path: '/dashboard',
         name: 'dashboard',
         component: () => import('./components/Dashboard.vue'),
       },
+      {
+        path: '/dashboard/:token',
+        name: 'transaction',
+        component: () => import('./components/EmptyPage.vue'),
+      },
     ],
+    meta: {
+      requires_auth: true,
+    },
   },
   {
     path: '/register',

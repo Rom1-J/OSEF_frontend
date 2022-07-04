@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import AppTopBar from './AppTopbar.vue';
 import AppMenu from './AppMenu.vue';
 import AppFooter from './AppFooter.vue';
@@ -43,35 +44,17 @@ export default {
         },
         {
           label: 'Échanges',
-          icon: 'pi pi-fw pi-sitemap',
           items: [
             {
-              label: 'JohnDoe',
-              icon: 'pi pi-fw pi-user',
-              to: '',
-            },
-            {
-              label: 'JaneDoe',
-              icon: 'pi pi-fw pi-user',
-              to: '',
-            },
-            {
-              label: 'Marko',
-              icon: 'pi pi-fw pi-user',
-              to: '',
+              label: 'Aucun échange...',
             },
           ],
         },
       ],
     };
   },
-  watch: {
-    $route() {
-      this.menuActive = false;
-      this.$toast.removeAllGroups();
-    },
-  },
   methods: {
+    ...mapActions(['LoadTransactions']),
     onWrapperClick() {
       if (!this.menuClick) {
         this.overlayMenuActive = false;
@@ -109,37 +92,12 @@ export default {
         this.mobileMenuActive = false;
       }
     },
-    onLayoutChange(layoutMode) {
-      this.layoutMode = layoutMode;
-    },
-    addClass(element, className) {
-      if (element.classList) element.classList.add(className);
-      // eslint-disable-next-line no-param-reassign
-      else element.className += ` ${className}`;
-    },
-    removeClass(element, className) {
-      if (element.classList) element.classList.remove(className);
-      else {
-        // eslint-disable-next-line no-param-reassign
-        element.className = element.className.replace(
-          new RegExp(`(^|\\b)${className.split(' ').join('|')}(\\b|$)`, 'gi'),
-          ' ',
-        );
-      }
-    },
     isDesktop() {
       return window.innerWidth >= 992;
     },
-    isSidebarVisible() {
-      if (this.isDesktop()) {
-        if (this.layoutMode === 'static') return !this.staticMenuInactive;
-        if (this.layoutMode === 'overlay') return this.overlayMenuActive;
-      }
-
-      return true;
-    },
   },
   computed: {
+    ...mapGetters(['StateTransactions', 'GetTransaction']),
     containerClass() {
       return ['layout-wrapper', {
         'layout-overlay': this.layoutMode === 'overlay',
@@ -152,14 +110,30 @@ export default {
       }];
     },
   },
-  beforeUpdate() {
-    if (this.mobileMenuActive) this.addClass(document.body, 'body-overflow-hidden');
-    else this.removeClass(document.body, 'body-overflow-hidden');
-  },
   components: {
     AppTopBar,
     AppMenu,
     AppFooter,
+  },
+  async created() {
+    await this.LoadTransactions();
+    if (this.StateTransactions) {
+      this.menu[1].items = [];
+
+      this.StateTransactions.forEach((el) => {
+        const transaction = this.GetTransaction(el.token);
+        this.menu[1].items.push({
+          label: transaction.external.username,
+          icon: 'pi pi-fw pi-user',
+          to: {
+            name: 'transaction',
+            params: {
+              token: transaction.token,
+            },
+          },
+        });
+      });
+    }
   },
 };
 </script>
