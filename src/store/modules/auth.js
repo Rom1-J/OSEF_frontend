@@ -5,11 +5,13 @@ export default {
     key: null,
     user: null,
     transactions: null,
+    files: null,
   },
   getters: {
     isAuthenticated: (state) => !!state.user,
     StateUser: (state) => state.user,
     StateTransactions: (state) => state.transactions,
+    StateFiles: (state) => state.files,
     StateKey: (state) => state.key,
     GetTransaction: (state) => (token) => {
       const transaction = state.transactions.filter((el) => el.token === token)[0];
@@ -68,7 +70,26 @@ export default {
           },
         },
       );
-      await commit('setTransactions', req.data);
+      // noinspection JSUnresolvedVariable
+      await commit(
+        'setTransactions',
+        req.data.sort((a, b) => (new Date(a.modification_date)) - (new Date(b.modification_date))),
+      );
+    },
+    async LoadFiles({ commit, getters }) {
+      const req = await axios.get(
+        '/api/files/',
+        {
+          headers: {
+            Authorization: `token ${getters.StateKey}`,
+          },
+        },
+      );
+      // noinspection JSUnresolvedVariable
+      await commit(
+        'setFiles',
+        req.data.sort((a, b) => (new Date(a.creation_date)) - (new Date(b.creation_date))),
+      );
     },
   },
   mutations: {
@@ -80,6 +101,9 @@ export default {
     },
     setTransactions(state, data) {
       state.transactions = data;
+    },
+    setFiles(state, data) {
+      state.files = data;
     },
     logout(state) {
       state.user = null;

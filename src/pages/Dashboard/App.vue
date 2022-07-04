@@ -54,7 +54,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['LoadTransactions']),
+    ...mapActions(['LoadTransactions', 'LoadFiles']),
     onWrapperClick() {
       if (!this.menuClick) {
         this.overlayMenuActive = false;
@@ -117,6 +117,8 @@ export default {
   },
   async created() {
     await this.LoadTransactions();
+    await this.LoadFiles();
+
     if (this.StateTransactions) {
       this.menu[1].items = [];
 
