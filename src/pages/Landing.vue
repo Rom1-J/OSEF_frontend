@@ -92,7 +92,7 @@
                   bg-primary font-normal text-black line-height-3 px-3"></Button>
         </router-link>
       </div>
-      <img src="https://via.placeholder.com/600x500" class="bottom-0 z-0"
+      <img src="@/layout/images/demo.png" class="bottom-0 z-0"
            alt="demo screen" style="right:10%;">
     </div>
 

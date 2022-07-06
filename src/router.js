@@ -43,6 +43,11 @@ const routes = [
       requires_guest: true,
     },
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'notFound',
+    component: () => import('./pages/NotFound.vue'),
+  },
 ];
 
 const router = createRouter({
