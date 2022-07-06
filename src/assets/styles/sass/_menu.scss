@@ -1,6 +1,6 @@
 .layout-sidebar {
 	position: fixed;
-	width: 300px;
+	width: 250px;
 	height: calc(100vh - 9rem);
 	z-index: 999;
 	overflow-y: auto;
@@ -27,7 +27,7 @@
                 margin-top: 0;
             }
         }
-        
+
         .layout-menuitem-root-text {
             text-transform: uppercase;
             color:var(--surface-900);

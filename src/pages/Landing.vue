@@ -195,12 +195,23 @@
           </template>
           <template #content>
             <blockquote>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Inventore
-              sed consequuntur error repudiandae numquam deserunt
-              quisquam repellat libero asperiores earum nam nobis, culpa
-              ratione
-              quam perferendis esse, cupiditate neque quas!
+              J'Hack Sparrow, formidable jeu de mot mêlant pirate des Caraïbes
+              et pirate informatique, est une équipe de 5 étudiants de l'EFREI Paris,
+              école d'ingénieur généraliste en informatique et technologies du numérique.
+              <br>
+              <br>
+              Nous sommes des étudiants passionnés par la Cybersécurité et nous réalisons
+              ce projet dans le cadre du Mastercamp. Ce Mastercamp est une période de un mois,
+              durant lequel nous devons monter en compétences. C'est un défi permettant de
+              s'habituer au mode de travail en entreprise mais également de s'habituer aux
+              deadlines qui peuvent exister au travail (car ici le délai est serré).
+              <br>
+              <br>
+              Ce site est donc l'aboutissement du travail de cinq étudiants dont la sueur
+              aura coulé par plusieurs fois de leurs fronts et nous sommes fiers et
+              enthousiastes à l'idée que vous, chers utilisateurs, puissiez l'utiliser
+              pour partager vos fichiers ! Nous espérons que votre expérience sera satisfaite,
+              pour tout problème technique notre équipe sera ravie de discuter avec vous.
             </blockquote>
           </template>
         </Card>
@@ -211,12 +222,27 @@
           </template>
           <template #content>
             <blockquote>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Inventore
-              sed consequuntur error repudiandae numquam deserunt
-              quisquam repellat libero asperiores earum nam nobis, culpa
-              ratione
-              quam perferendis esse, cupiditate neque quas!
+              OSEF est une plateforme de partage de fichier proposant le chiffrement de bout en
+              bout. Grâce à ce chiffrement, les fichiers échangés sur cette application Web ne
+              saurait être lu par quelconque autre personne que le destinataire du message.
+              <br>
+              <br>
+              En effet, le chiffrement de bout en bout consiste à chiffrer depuis votre session,
+              afin que tout fichier sortant, ce dirigeant vers nos serveurs soit chiffré.
+              <br>
+              <br>
+              Un fichier chiffré correspond à un fichier dont le contenu a été masqué à l'aide
+              d'une clé unique que vous possédez à la création de votre compte.
+              <br>
+              <br>
+              Toutefois, vous n'avez pas à vous souciez de ces clés, notre équipe s'occupe de leurs
+              gestions. Ainsi, même si des personnes mal-intentionné venait à s'emparer de votre
+              fichier, ils ne pourraient pas y voir le contenu car ils ne sont pas désigné comme
+              destinataire du message.
+              <br>
+              <br>
+              <br>
+              Votre sécurité est notre priorité.
             </blockquote>
           </template>
         </Card>
@@ -227,12 +253,15 @@
           </template>
           <template #content>
             <blockquote>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Inventore
-              sed consequuntur error repudiandae numquam deserunt
-              quisquam repellat libero asperiores earum nam nobis, culpa
-              ratione
-              quam perferendis esse, cupiditate neque quas!
+              Ne vous inquiétez pas toutes les données que vous pouvez échanger avec vos contacts
+              sont stockées sur le serveur dans un but purement fonctionnel.
+              <br>
+              <br>
+              Nous ne revendons en aucun cas vos données, ni ne les utilisons pour tout autre but.
+              <br>
+              <br>
+              Notre seul préoccupation est que cette plateforme puissent rendre ses utilisateurs
+              satisfaits et que ces derniers ne rencontre aucun problème dessus.
             </blockquote>
           </template>
         </Card>
