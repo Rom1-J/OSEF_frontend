@@ -76,19 +76,35 @@ export default {
         req.data.sort((a, b) => (new Date(a.modification_date)) - (new Date(b.modification_date))),
       );
     },
-    async LoadFiles({ commit, getters }) {
+    async LoadFiles({ commit, getters }, token = 'all') {
+      if (getters.StateFiles && (token in getters.StateFiles)) return;
+
+      const args = token !== 'all' ? `?transaction__token=${token}` : '';
       const req = await axios.get(
-        '/api/files/',
+        `/api/files/${args}`,
         {
           headers: {
             Authorization: `token ${getters.StateKey}`,
           },
         },
       );
+
+      const data = req.data.sort(
+        (a, b) => (new Date(a.creation_date)) - (new Date(b.creation_date)),
+      );
+      const filtered = {};
+      data.forEach((el) => {
+        if (!(el.transaction in filtered)) filtered[el.transaction] = [];
+        filtered[el.transaction].push(el);
+      });
+
       // noinspection JSUnresolvedVariable
       await commit(
         'setFiles',
-        req.data.sort((a, b) => (new Date(a.creation_date)) - (new Date(b.creation_date))),
+        {
+          all: data,
+          ...filtered,
+        },
       );
     },
   },

@@ -7,7 +7,7 @@
 
     <div class="layout-main-container">
       <div class="layout-main">
-        <router-view/>
+        <router-view :key="$route.fullPath"/>
       </div>
       <AppFooter/>
     </div>
@@ -21,9 +21,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import AppTopBar from './AppTopbar.vue';
-import AppMenu from './AppMenu.vue';
-import AppFooter from './AppFooter.vue';
+import AppTopBar from './parts/AppTopbar.vue';
+import AppMenu from './parts/AppMenu.vue';
+import AppFooter from './parts/AppFooter.vue';
 
 export default {
   emits: ['change-theme'],

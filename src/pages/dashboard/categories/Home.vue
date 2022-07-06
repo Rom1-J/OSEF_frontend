@@ -6,7 +6,9 @@
           <div>
             <span
                 class="block text-500 font-medium mb-3">Fichiers envoyés</span>
-            <span class="text-900 font-medium text-8xl">--</span>
+            <span class="text-900 font-medium text-8xl">
+              {{ getSentFiles() }}
+            </span>
           </div>
           <div
               class="flex align-items-center justify-content-center bg-blue-100 border-round"
@@ -21,7 +23,9 @@
         <div class="flex justify-content-between mb-3">
           <div>
             <span class="block text-500 font-medium mb-3">Fichiers reçus</span>
-            <span class="text-900 font-medium text-8xl">--</span>
+            <span class="text-900 font-medium text-8xl">
+              {{ getReceivedFiles() }}
+            </span>
           </div>
           <div
               class="flex align-items-center justify-content-center bg-green-100 border-round"
@@ -33,23 +37,7 @@
     </div>
 
     <div class="col-12">
-      <div class="card">
-        <h5>Derniers échanges</h5>
-        <DataTable :value="files" :rows="15" :paginator="true"
-                   responsiveLayout="scroll">
-          <Column field="filename" header="Fichier"
-                  style="width:25%"></Column>
-          <Column field="owner" header="Propriétaire"
-                  style="width:25%">
-          </Column>
-          <Column field="receiver" header="Receveur"
-                  style="width:25%">
-          </Column>
-          <Column field="date" header="Date"
-                  style="width:25%">
-          </Column>
-        </DataTable>
-      </div>
+      <FileTable title="Derniers échanges" :files="files"></FileTable>
     </div>
   </div>
 </template>
@@ -57,7 +45,9 @@
 <script>
 
 import moment from 'moment';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+
+import FileTable from '@/components/FileTable.vue';
 
 export default {
   data() {
@@ -66,10 +56,26 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['StateFiles']),
+    ...mapGetters(['StateFiles', 'StateUser']),
+  },
+  components: {
+    FileTable,
+  },
+  methods: {
+    ...mapActions(['LoadFiles']),
+    getSentFiles() {
+      if (!this.files) return '--';
+      return this.files.filter((file) => file.owner === this.StateUser.username).length;
+    },
+    getReceivedFiles() {
+      if (!this.files) return '--';
+      return this.files.filter((file) => file.receiver === this.StateUser.username).length;
+    },
   },
   async created() {
-    this.StateFiles.forEach((el) => {
+    await this.LoadFiles(this.token);
+
+    this.StateFiles.all.forEach((el) => {
       this.files.push({
         filename: el.filename,
         owner: el.owner,

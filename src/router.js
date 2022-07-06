@@ -10,17 +10,17 @@ const routes = [
   {
     path: '/dashboard',
     name: 'home',
-    component: () => import('./pages/Dashboard/App.vue'),
+    component: () => import('./pages/dashboard/Dashboard.vue'),
     children: [
       {
         path: '/dashboard',
         name: 'dashboard',
-        component: () => import('./components/Dashboard.vue'),
+        component: () => import('./pages/dashboard/categories/Home.vue'),
       },
       {
         path: '/dashboard/:token',
         name: 'transaction',
-        component: () => import('./components/EmptyPage.vue'),
+        component: () => import('./pages/dashboard/categories/View.vue'),
       },
     ],
     meta: {

@@ -122,9 +122,7 @@ export default {
     async handleSubmit(isFormValid) {
       this.submitted = true;
 
-      if (!isFormValid) {
-        return;
-      }
+      if (!isFormValid) return;
 
       try {
         await this.LogIn(this.$data);
@@ -132,7 +130,7 @@ export default {
       } catch (error) {
         const { response } = error;
 
-        if (response?.status === 400) {
+        if (response?.status !== 200) {
           this.$toast.add({
             severity: 'error',
             summary: 'Erreur',
