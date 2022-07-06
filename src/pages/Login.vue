@@ -86,7 +86,6 @@
       </div>
     </div>
   </div>
-  <Toast />
 </template>
 
 <script>
@@ -100,8 +99,8 @@ export default {
   },
   data() {
     return {
-      email: '',
-      password: '',
+      email: 'john@doe.fr',
+      password: 'azertyuiop741852963',
       remember: false,
       submitted: false,
     };
@@ -126,6 +125,12 @@ export default {
 
       try {
         await this.LogIn(this.$data);
+        this.$toast.add({
+          severity: 'info',
+          summary: 'Chargement',
+          detail: 'Génération des clés...',
+          life: 5000,
+        });
         await this.$router.push({ name: 'dashboard' });
       } catch (error) {
         const { response } = error;
@@ -135,6 +140,7 @@ export default {
             severity: 'error',
             summary: 'Erreur',
             detail: 'Mot de passe ou e-mail incorrect',
+            life: 3000,
           });
         }
       }

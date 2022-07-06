@@ -54,7 +54,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['LoadTransactions', 'LoadFiles']),
+    ...mapActions(['LoadTransactions', 'LoadFiles', 'LoadKeys', 'UpdatePublicKey']),
     onWrapperClick() {
       if (!this.menuClick) {
         this.overlayMenuActive = false;
@@ -97,7 +97,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['StateTransactions', 'GetTransaction']),
+    ...mapGetters(['StateTransactions', 'StateKeys', 'StateUser', 'GetTransaction']),
     containerClass() {
       return ['layout-wrapper', {
         'layout-overlay': this.layoutMode === 'overlay',
@@ -116,6 +116,19 @@ export default {
     AppFooter,
   },
   async created() {
+    if (!this.StateKeys) await this.LoadKeys();
+
+    // noinspection JSUnresolvedVariable
+    if (this.StateKeys.publicKey !== this.StateUser.pub_key) {
+      this.$toast.add({
+        severity: 'info',
+        summary: 'Mise à jour',
+        detail: 'Mise à jour de votre clé publique, certains fichiers ne seront plus disponibles...',
+        life: 3000,
+      });
+      await this.UpdatePublicKey();
+    }
+
     await this.LoadTransactions();
     await this.LoadFiles();
 

@@ -1,11 +1,13 @@
 import axios from 'axios';
+import { generateKeys } from '@/utils/crypto';
 
 export default {
   state: {
     key: null,
     user: null,
+    keys: null,
     transactions: null,
-    files: null,
+    files: { all: [] },
   },
   getters: {
     isAuthenticated: (state) => !!state.user,
@@ -13,6 +15,7 @@ export default {
     StateTransactions: (state) => state.transactions,
     StateFiles: (state) => state.files,
     StateKey: (state) => state.key,
+    StateKeys: (state) => state.keys,
     GetTransaction: (state) => (token) => {
       const transaction = state.transactions.filter((el) => el.token === token)[0];
       const externalUser = Object.keys(transaction.user1)[0] === state.user.username
@@ -23,7 +26,7 @@ export default {
         token: transaction.token,
         external: {
           username: Object.keys(externalUser)[0],
-          pubkey: Object.values(externalUser)[0],
+          publicKey: Object.values(externalUser)[0],
         },
       };
     },
@@ -45,14 +48,17 @@ export default {
 
       await commit(
         'setUser',
-        (await axios.get(
-          '/api/users/me/',
-          {
-            headers: {
-              Authorization: `token ${getters.StateKey}`,
+        {
+          ...(await axios.get(
+            '/api/users/me/',
+            {
+              headers: {
+                Authorization: `token ${getters.StateKey}`,
+              },
             },
-          },
-        )).data,
+          )).data,
+          password: form.password,
+        },
       );
     },
 
@@ -76,10 +82,12 @@ export default {
         req.data.sort((a, b) => (new Date(a.modification_date)) - (new Date(b.modification_date))),
       );
     },
-    async LoadFiles({ commit, getters }, token = 'all') {
-      if (getters.StateFiles && (token in getters.StateFiles)) return;
 
-      const args = token !== 'all' ? `?transaction__token=${token}` : '';
+    async LoadFiles({ commit, getters }, kwargs = { token: 'all', force: false }) {
+      const { force, token } = kwargs;
+      if (!force && getters.StateFiles && (token in getters.StateFiles)) return;
+
+      const args = (!force && token !== 'all') ? `?transaction__token=${token}` : '';
       const req = await axios.get(
         `/api/files/${args}`,
         {
@@ -90,8 +98,9 @@ export default {
       );
 
       const data = req.data.sort(
-        (a, b) => (new Date(a.creation_date)) - (new Date(b.creation_date)),
+        (a, b) => (new Date(b.creation_date)) - (new Date(a.creation_date)),
       );
+
       const filtered = {};
       data.forEach((el) => {
         if (!(el.transaction in filtered)) filtered[el.transaction] = [];
@@ -107,10 +116,32 @@ export default {
         },
       );
     },
+
+    async LoadKeys({ commit, getters }) {
+      if (getters.StateKey === null) return;
+
+      const userData = getters.StateUser;
+      await commit('setKeys', await generateKeys(userData.password, userData.salt));
+
+      delete userData.password;
+      delete userData.salt;
+      await commit('setUser', userData);
+    },
+
+    async UpdatePublicKey({ commit, getters }) {
+      const userData = getters.StateUser;
+      userData.pub_key = getters.publicKey;
+
+      await axios.put('/api/users/pubkey/', ...userData);
+      await commit('setUser', userData);
+    },
   },
   mutations: {
     setKey(state, key) {
       state.key = key;
+    },
+    setKeys(state, keys) {
+      state.keys = keys;
     },
     setUser(state, data) {
       state.user = data;

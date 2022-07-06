@@ -4,7 +4,27 @@
       <div class="card">
         <div class="flex justify-content-between flex-row align-items-center">
           <span class="text-2xl">{{ transaction?.external.username }}</span>
-          <Button label="Supprimer" class="p-button-danger"/>
+          <Button label="Supprimer" class="p-button-danger"
+                  @click="displayConfirmation = true"/>
+          <Dialog header="Confirmation" v-model:visible="displayConfirmation"
+                  :style="{width: '350px'}" :modal="true">
+            <div class="flex align-items-center justify-content-center">
+              <i class="pi pi-exclamation-triangle mr-3"
+                 style="font-size: 2rem"/>
+              <span>
+                Êtes-vous sûr(e) de vouloir retirer
+                <b>{{ transaction?.external.username }}</b>
+                de vos contacts ?
+              </span>
+            </div>
+            <template #footer>
+              <Button label="Non" icon="pi pi-times"
+                      @click="displayConfirmation = false"
+                      class="p-button-text"/>
+              <Button label="Oui" icon="pi pi-check"
+                      @click="deleteTransaction" class="p-button-text"/>
+            </template>
+          </Dialog>
         </div>
       </div>
       <div class="card mb-0">
@@ -22,14 +42,13 @@
     </div>
 
     <div class="col-12">
-      <FileTable title="Derniers échanges" :files="files"></FileTable>
+      <FileTable title="Derniers échanges" :files="StateFiles[token]"></FileTable>
     </div>
   </div>
 </template>
 
 <script>
 
-import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 
 import FileTable from '@/components/FileTable.vue';
@@ -37,9 +56,9 @@ import FileTable from '@/components/FileTable.vue';
 export default {
   data() {
     return {
-      files: [],
       token: null,
       transaction: null,
+      displayConfirmation: false,
     };
   },
   computed: {
@@ -50,22 +69,23 @@ export default {
   },
   methods: {
     ...mapActions(['LoadFiles']),
+    deleteTransaction() {
+      this.$router.push({ name: 'dashboard' })
+        .then(() => {
+          this.$toast.add({
+            severity: 'success',
+            summary: 'Suppression terminée',
+            detail: 'Ce contact a été supprimé de vos relations avec succès !',
+            life: 3000,
+          });
+        });
+    },
   },
   async created() {
     this.token = this.$route.params.token;
     this.transaction = this.GetTransaction(this.token);
 
-    await this.LoadFiles(this.token);
-
-    this.StateFiles[this.token].forEach((el) => {
-      this.files.push({
-        id: el.id,
-        filename: el.filename,
-        owner: el.owner,
-        receiver: el.receiver,
-        date: moment(el.creation_date).format('DD/MM/YYYY, hh:mm:ss'),
-      });
-    });
+    await this.LoadFiles({ token: this.token });
   },
 };
 </script>

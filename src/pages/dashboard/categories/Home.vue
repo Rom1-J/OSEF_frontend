@@ -37,24 +37,18 @@
     </div>
 
     <div class="col-12">
-      <FileTable title="Derniers échanges" :files="files"></FileTable>
+      <FileTable title="Derniers échanges" :files="StateFiles?.all"></FileTable>
     </div>
   </div>
 </template>
 
 <script>
 
-import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 
 import FileTable from '@/components/FileTable.vue';
 
 export default {
-  data() {
-    return {
-      files: [],
-    };
-  },
   computed: {
     ...mapGetters(['StateFiles', 'StateUser']),
   },
@@ -64,25 +58,16 @@ export default {
   methods: {
     ...mapActions(['LoadFiles']),
     getSentFiles() {
-      if (!this.files) return '--';
-      return this.files.filter((file) => file.owner === this.StateUser.username).length;
+      if (!this.StateFiles?.all) return '--';
+      return this.StateFiles.all.filter((file) => file.owner === this.StateUser.username).length;
     },
     getReceivedFiles() {
-      if (!this.files) return '--';
-      return this.files.filter((file) => file.receiver === this.StateUser.username).length;
+      if (!this.StateFiles?.all) return '--';
+      return this.StateFiles.all.filter((file) => file.receiver === this.StateUser.username).length;
     },
   },
   async created() {
-    await this.LoadFiles(this.token);
-
-    this.StateFiles.all.forEach((el) => {
-      this.files.push({
-        filename: el.filename,
-        owner: el.owner,
-        receiver: el.receiver,
-        date: moment(el.creation_date).format('DD/MM/YYYY, hh:mm:ss'),
-      });
-    });
+    await this.LoadFiles();
   },
 };
 </script>
