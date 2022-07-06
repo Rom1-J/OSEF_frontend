@@ -5,7 +5,7 @@
         <div class="flex justify-content-between flex-row align-items-center">
           <span class="text-2xl">{{ transaction?.external.username }}</span>
           <Button label="Supprimer" class="p-button-danger"
-                  @click="displayConfirmation = true"/>
+                  @click="displayConfirmation = true" disabled/>
           <Dialog header="Confirmation" v-model:visible="displayConfirmation"
                   :style="{width: '350px'}" :modal="true">
             <div class="flex align-items-center justify-content-center">
@@ -28,16 +28,7 @@
         </div>
       </div>
       <div class="card mb-0">
-        <FileUpload :file-limit="1"
-                    chooseLabel="Choisir"
-                    uploadLabel="Envoyer"
-                    :show-cancel-button="false"
-                    :multiple="false"
-                    :maxFileSize="10000000">
-          <template #empty>
-            <p>Envoyer un fichier</p>
-          </template>
-        </FileUpload>
+        <FileUpload :transaction="transaction"/>
       </div>
     </div>
 
@@ -51,6 +42,7 @@
 
 import { mapActions, mapGetters } from 'vuex';
 
+import FileUpload from '@/components/FileUpload.vue';
 import FileTable from '@/components/FileTable.vue';
 
 export default {
@@ -65,6 +57,7 @@ export default {
     ...mapGetters(['StateFiles', 'GetTransaction']),
   },
   components: {
+    FileUpload,
     FileTable,
   },
   methods: {

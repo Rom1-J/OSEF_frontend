@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <DataTable :value="files" :rows="15" :paginator="true"
+    <DataTable :value="files" :rows="50" :paginator="true"
                responsiveLayout="scroll" class="p-datatable-gridlines"
                :rowHover="true" v-model:filters="filters" :filters="filters"
                :globalFilterFields="['filename']">
@@ -21,7 +21,7 @@
                            placeholder="Nom du fichier"
                            style="width: 100%" type="search"/>
             </span>
-            <Button icon="pi pi-refresh" @click="refreshFiles"/>
+            <Button icon="pi pi-refresh" @click="refreshFiles" :disabled="refreshing"/>
           </div>
         </div>
       </template>
@@ -64,6 +64,7 @@ export default {
   props: ['title', 'files'],
   data() {
     return {
+      refreshing: false,
       filters: {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
@@ -78,7 +79,9 @@ export default {
       return moment(date).format('DD/MM/YYYY, HH:mm:ss');
     },
     async refreshFiles() {
+      this.refreshing = true;
       await this.LoadFiles({ force: true });
+      this.refreshing = false;
     },
   },
 };

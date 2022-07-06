@@ -20,6 +20,28 @@ async function generateKeys(password, salt) {
   };
 }
 
+async function cipher(file, receiverPublicKey, secretKey, callback) {
+  const reader = new FileReader();
+  reader.readAsDataURL(file.data);
+
+  reader.onload = async (e) => {
+    const content = e.target.result.replace('data:', '').replace(/^.+,/, '');
+
+    const sharedKey = nacl.box.before(
+      nacl.util.decodeBase64(receiverPublicKey),
+      nacl.util.decodeBase64(secretKey),
+    );
+
+    await callback(
+      nacl.box.after(
+        nacl.util.decodeUTF8(content),
+        file.nonce,
+        sharedKey,
+      ),
+    );
+  };
+}
+
 async function decipher(file, ownerPublicKey, secretKey) {
   console.log(file, ownerPublicKey, secretKey);
   const reader = new FileReader();
@@ -53,6 +75,8 @@ async function decipher(file, ownerPublicKey, secretKey) {
 }
 
 export {
+  nacl,
   generateKeys,
+  cipher,
   decipher,
 };

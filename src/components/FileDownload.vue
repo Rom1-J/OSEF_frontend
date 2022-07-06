@@ -14,7 +14,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['StateKeys', 'StateUser', 'GetTransaction']),
+    ...mapGetters(['StateKeys', 'GetTransaction']),
   },
   methods: {
     downloadable() {
