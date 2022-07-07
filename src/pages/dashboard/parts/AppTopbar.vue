@@ -30,6 +30,12 @@
           </button>
         </router-link>
       </li>
+      <li>
+        <Button @click="handleSubmit" class="p-link layout-topbar-button">
+          <i class="pi pi-sign-out"></i>
+          <span>Se déconnecter</span>
+        </Button>
+      </li>
     </ul>
   </form>
 </template>
@@ -38,6 +44,7 @@
 import { useVuelidate } from '@vuelidate/core';
 import { minLength, maxLength, required } from '@vuelidate/validators';
 import axios from 'axios';
+import { mapActions } from 'vuex';
 
 export default {
   setup() {
@@ -59,6 +66,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['LogOut']),
     onMenuToggle(event) {
       this.$emit('menu-toggle', event);
     },
@@ -88,6 +96,17 @@ export default {
         }
       }
       this.submitted = false;
+    },
+    async handleSubmit() {
+      await this.LogOut();
+      this.$toast.add({
+        severity: 'success',
+        summary: 'Déconnexion',
+        detail: 'Vous avez été déconnecté avec succès !',
+        life: 3000,
+      });
+
+      await this.$router.push({ name: 'login' });
     },
   },
 };

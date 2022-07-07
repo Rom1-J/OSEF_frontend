@@ -168,7 +168,11 @@ export default {
       state.files = data;
     },
     logout(state) {
+      state.key = null;
       state.user = null;
+      state.keys = null;
+      state.transactions = null;
+      state.files = { all: [] };
     },
   },
 };
