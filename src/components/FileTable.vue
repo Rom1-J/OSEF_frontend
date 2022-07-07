@@ -10,8 +10,8 @@
           <h5>
             {{ title }}
             <span class="text-color-secondary">
-              ({{ files.length }}
-              fichier{{ files.length > 1 ? 's' : '' }})
+              ({{ files?.length }}
+              fichier{{ files?.length > 1 ? 's' : '' }})
             </span>
           </h5>
           <div class="mb-2">

@@ -87,8 +87,12 @@ export default {
       token: 'all',
       force: false,
     }) {
-      const { force, token } = kwargs;
-      if (!force && getters.StateFiles && (token in getters.StateFiles)) return;
+      const { force, token } = {
+        token: 'all',
+        force: false,
+        ...kwargs,
+      };
+      if (!force) return;
 
       const args = (!force && token !== 'all') ? `?transaction__token=${token}` : '';
       const req = await axios.get(
