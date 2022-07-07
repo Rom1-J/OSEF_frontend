@@ -83,7 +83,10 @@ export default {
       );
     },
 
-    async LoadFiles({ commit, getters }, kwargs = { token: 'all', force: false }) {
+    async LoadFiles({ commit, getters }, kwargs = {
+      token: 'all',
+      force: false,
+    }) {
       const { force, token } = kwargs;
       if (!force && getters.StateFiles && (token in getters.StateFiles)) return;
 
@@ -128,12 +131,20 @@ export default {
       await commit('setUser', userData);
     },
 
-    async UpdatePublicKey({ commit, getters }) {
-      const userData = getters.StateUser;
-      userData.pub_key = getters.publicKey;
+    async UpdatePublicKey({ getters }) {
+      await axios.put('/api/users/pubkey/', {
+        pub_key: getters.StateKey.publicKey,
+      });
+    },
 
-      await axios.put('/api/users/pubkey/', ...userData);
-      await commit('setUser', userData);
+    async UpdateUser({ commit, getters }, form) {
+      const data = {
+        first_name: form.firstName,
+        last_name: form.lastName,
+      };
+
+      await axios.patch('/api/accounts/user/', data);
+      await commit('setUser', { ...getters.StateUser, ...data });
     },
   },
   mutations: {

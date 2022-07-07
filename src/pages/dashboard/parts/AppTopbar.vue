@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-topbar">
+  <form class="layout-topbar" @submit.prevent="invite(!v$.$invalid)">
     <router-link to="/" class="layout-topbar-logo">
       <img alt="Logo" src="@/layout/images/OSEF-logo.png"/>
     </router-link>
@@ -13,28 +13,81 @@
             leaveToClass: 'hidden', leaveActiveClass: 'fadeout', hideOnOutsideClick: true}">
       <i class="pi pi-ellipsis-v"></i>
     </button>
-    <ul class="layout-topbar-menu hidden lg:flex origin-top">
+    <ul class="layout-topbar-menu hidden lg:flex origin-top lg:align-items-center">
       <li>
-        <button class="p-link layout-topbar-button">
-          <i class="pi pi-cog"></i>
-          <span>Settings</span>
-        </button>
+        <div class="p-inputgroup">
+          <InputText placeholder="Code d'ami" maxlength="6"
+                     v-model="v$.inviteCode.$model"/>
+          <Button label="Inviter" type="submit"
+                  :disabled="v$.inviteCode.$invalid || submitted"/>
+        </div>
       </li>
       <li>
-        <button class="p-link layout-topbar-button">
-          <i class="pi pi-user"></i>
-          <span>Profile</span>
-        </button>
+        <router-link :to="{name: 'profile'}">
+          <button class="p-link layout-topbar-button">
+            <i class="pi pi-user"></i>
+            <span>Profile</span>
+          </button>
+        </router-link>
       </li>
     </ul>
-  </div>
+  </form>
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
+import { minLength, maxLength, required } from '@vuelidate/validators';
+import axios from 'axios';
+
 export default {
+  setup() {
+    return { v$: useVuelidate() };
+  },
+  data() {
+    return {
+      inviteCode: '',
+      submitted: false,
+    };
+  },
+  validations() {
+    return {
+      inviteCode: {
+        required,
+        minLengthValue: minLength(6),
+        maxLengthValue: maxLength(6),
+      },
+    };
+  },
   methods: {
     onMenuToggle(event) {
       this.$emit('menu-toggle', event);
+    },
+    async invite(isFormValid) {
+      this.submitted = true;
+      if (!isFormValid) return;
+
+      try {
+        await axios.post('/api/transactions/', { friend_code: this.inviteCode });
+        this.$toast.add({
+          severity: 'success',
+          summary: 'Envoyé',
+          detail: 'Demande envoyée avec succès !',
+          life: 3000,
+        });
+        this.inviteCode = '';
+      } catch (error) {
+        const { response } = error;
+
+        if (response?.status !== 200) {
+          this.$toast.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Une erreur inconnue est survenue',
+            life: 3000,
+          });
+        }
+      }
+      this.submitted = false;
     },
   },
 };

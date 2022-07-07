@@ -80,7 +80,7 @@
               </a>
             </div>
             <Button type="submit" label="Sign In"
-                    class="w-full p-3 text-xl"></Button>
+                    class="w-full p-3 text-xl" :disabled="submitted"></Button>
           </form>
         </div>
       </div>

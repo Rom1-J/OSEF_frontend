@@ -18,6 +18,11 @@ const routes = [
         component: () => import('./pages/dashboard/categories/Home.vue'),
       },
       {
+        path: '/dashboard/profile',
+        name: 'profile',
+        component: () => import('./pages/dashboard/categories/Profile.vue'),
+      },
+      {
         path: '/dashboard/:token',
         name: 'transaction',
         component: () => import('./pages/dashboard/categories/View.vue'),
