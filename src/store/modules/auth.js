@@ -32,16 +32,6 @@ export default {
     },
   },
   actions: {
-    async Register({ dispatch }, form) {
-      await axios.post('register', form);
-
-      const UserForm = new FormData();
-      UserForm.append('username', form.username);
-      UserForm.append('password', form.password);
-
-      await dispatch('LogIn', UserForm);
-    },
-
     async LogIn({ commit, getters }, form) {
       const req = await axios.post('/api/accounts/login/', form);
       await commit('setKey', req.data.key);

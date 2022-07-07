@@ -6,7 +6,7 @@
       <div class="col-12 mt-5 xl:mt-0 text-center">
         <router-link :to="{name: 'landing'}"
                      class="hover:underline">
-          <img src="layout/images/OSEF-logo.png" alt="Sakai logo" class="mb-5"
+          <img src="@/layout/images/OSEF-logo.png" alt="Sakai logo" class="mb-5"
                height="60">
         </router-link>
       </div>
@@ -80,7 +80,7 @@
               </a>
             </div>
             <Button type="submit" label="Sign In"
-                    class="w-full p-3 text-xl" :disabled="submitted"></Button>
+                    class="w-full p-3 text-xl" :disabled="submitted || v$.$invalid"></Button>
           </form>
         </div>
       </div>
@@ -99,8 +99,8 @@ export default {
   },
   data() {
     return {
-      email: 'john@doe.fr',
-      password: 'azertyuiop741852963',
+      email: '',
+      password: '',
       remember: false,
       submitted: false,
     };

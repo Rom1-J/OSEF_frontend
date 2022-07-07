@@ -48,10 +48,6 @@
                 <li v-if="v$.username.required.$invalid" class="p-error">
                   {{ v$.username.required.$message }}
                 </li>
-                <li v-if="v$.username.mustNotHaveSpace.$invalid"
-                    class="p-error">
-                  {{ v$.username.mustNotHaveSpace.$message }}
-                </li>
               </ul>
             </div>
 
@@ -135,7 +131,7 @@
             </div>
 
             <Button type="submit" label="S'inscrire"
-                    class="w-full p-3 text-xl"/>
+                    class="w-full p-3 text-xl" :disabled="submitted"/>
           </form>
         </div>
       </div>
@@ -148,8 +144,7 @@ import {
   email, helpers, required, sameAs,
 } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
-
-const mustNotHaveSpace = (value) => !value.contains(' ');
+import axios from 'axios';
 
 export default {
   setup() {
@@ -169,7 +164,6 @@ export default {
     return {
       username: {
         required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
-        mustNotHaveSpace: helpers.withMessage('Le nom d\'utilisateur ne dois pas contenir d\'espace.', mustNotHaveSpace),
       },
       email: {
         required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
@@ -188,16 +182,38 @@ export default {
     };
   },
   methods: {
-    handleSubmit(isFormValid) {
+    async handleSubmit(isFormValid) {
       this.submitted = true;
-      window.v$ = this.v$;
 
-      if (!isFormValid) {
-        console.log('invalid');
-        return;
+      if (!isFormValid) return;
+
+      try {
+        await axios.post('/api/accounts/registration/', this.$data);
+        this.$toast.add({
+          severity: 'info',
+          summary: 'Confirmation',
+          detail: 'Votre compte a été crée, veuillez valider votre adresse mail.',
+          life: 3000,
+        });
+        await this.$router.push({ name: 'login' });
+      } catch (error) {
+        const { response } = error;
+
+        if (response?.status !== 200) {
+          Object.values(response.data).forEach((errors) => {
+            errors.forEach((message) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: 'Erreur',
+                detail: message,
+                life: 3000,
+              });
+            });
+          });
+        }
       }
 
-      console.log('valid');
+      this.submitted = false;
     },
   },
 };

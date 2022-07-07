@@ -143,6 +143,7 @@ export default {
           detail: 'Changements sauvegardés avec succès !',
           life: 3000,
         });
+        this.$router.push({ name: 'login' });
       } catch (error) {
         const { response } = error;
 
