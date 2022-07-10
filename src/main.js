@@ -93,6 +93,7 @@ import axios from 'axios';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import i18n from './i18n';
 
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0);
@@ -111,6 +112,7 @@ app.use(ConfirmationService);
 app.use(ToastService);
 app.use(router);
 app.use(store);
+app.use(i18n);
 
 app.directive('tooltip', Tooltip);
 app.directive('ripple', Ripple);

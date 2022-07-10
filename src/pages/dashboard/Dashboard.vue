@@ -35,18 +35,18 @@ export default {
       mobileMenuActive: false,
       menu: [
         {
-          label: 'Home',
+          label: this.$t('misc.home'),
           items: [{
-            label: 'Dashboard',
+            label: this.$t('misc.dashboard'),
             icon: 'pi pi-fw pi-home',
             to: { name: 'dashboard' },
           }],
         },
         {
-          label: 'Échanges',
+          label: this.$t('status.exchange.title'),
           items: [
             {
-              label: 'Aucun échange...',
+              label: this.$t('status.exchange.empty'),
             },
           ],
         },
@@ -122,9 +122,9 @@ export default {
     if (this.StateKeys.publicKey !== this.StateUser.pub_key) {
       this.$toast.add({
         severity: 'info',
-        summary: 'Mise à jour',
-        detail: 'Mise à jour de votre clé publique, certains fichiers ne seront plus disponibles...',
-        life: 3000,
+        summary: this.$t('status.update.title'),
+        detail: this.$t('status.update.message.pub_key'),
+        life: 5000,
       });
       await this.UpdatePublicKey();
     }

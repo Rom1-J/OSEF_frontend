@@ -11,14 +11,14 @@
             {{ title }}
             <span class="text-color-secondary">
               ({{ files?.length }}
-              fichier{{ files?.length > 1 ? 's' : '' }})
+              {{ $tc('misc.file', files?.length) }})
             </span>
           </h5>
           <div class="mb-2">
             <span class="p-input-icon-left mr-4">
               <i class="pi pi-search"/>
                 <InputText v-model="filters['global'].value"
-                           placeholder="Nom du fichier"
+                           :placeholder="$t('fields.filename')"
                            style="width: 100%" type="search"/>
             </span>
             <Button icon="pi pi-refresh" @click="refreshFiles" :disabled="refreshing"/>
@@ -26,21 +26,21 @@
         </div>
       </template>
       <template #loading>
-        Chargement des fichiers...
+        {{ $t('status.loading.messages.files') }}
       </template>
       <template #empty>
-        Aucun résultat...
+        {{ $t('status.no_result') }}
       </template>
-      <Column field="filename" header="Fichier"
+      <Column field="filename" :header="$t('fields.file')"
               style="width:30%" :sortable="true">
       </Column>
-      <Column field="owner" header="Propriétaire"
+      <Column field="owner" :header="$t('fields.owner')"
               style="width:20%" :sortable="true">
       </Column>
-      <Column field="receiver" header="Receveur"
+      <Column field="receiver" :header="$t('fields.receiver')"
               style="width:20%" :sortable="true">
       </Column>
-      <Column field="date" header="Date"
+      <Column field="date" :header="$t('fields.date')"
               style="width:25%" :sortable="true">
         <template #body="{data}">
           <span>{{ formatDate(data.creation_date) }}</span>

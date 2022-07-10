@@ -6,50 +6,56 @@
         <form @submit.prevent="handleSubmit(!v$.$invalid)"
               class="p-fluid formgrid grid">
           <div class="field col-12 md:col-4">
-            <label for="username">Nom d'utilisateur</label>
+            <label for="username">
+              {{ $t('fields.username') }}
+            </label>
             <InputText v-model="username" id="username" disabled type="text"/>
           </div>
           <div class="field col-12 md:col-4">
             <label for="firstname"
                    :class="{'p-error':v$.firstName.$invalid && submitted}">
-              Prénom
+              {{ $t('fields.firstname') }}
             </label>
             <InputText v-model="v$.firstName.$model" id="firstname"
                        :class="{'p-invalid':v$.firstName.$invalid && submitted}"
                        type="text"/>
             <small v-if="(v$.firstName.$invalid && submitted) || v$.firstName.$pending.$response"
                    class="p-error">
-              {{v$.firstName.alpha.$message}}
+              {{ v$.firstName.alpha.$message }}
             </small>
           </div>
           <div class="field col-12 md:col-4">
             <label for="lastname"
                    :class="{'p-error':v$.lastName.$invalid && submitted}">
-              Nom
+              {{ $t('fields.lastname') }}
             </label>
             <InputText v-model="v$.lastName.$model" id="lastname"
                        :class="{'p-invalid':v$.lastName.$invalid && submitted}"
                        type="text"/>
             <small v-if="(v$.lastName.$invalid && submitted) || v$.lastName.$pending.$response"
                    class="p-error">
-              {{v$.lastName.alpha.$message}}
+              {{ v$.lastName.alpha.$message }}
             </small>
           </div>
           <div class="field col-12">
-            <label for="email">Adresse e-mail</label>
+            <label for="email">
+              {{ $t('fields.email') }}
+            </label>
             <InputText v-model="email" id="email" disabled type="email"/>
           </div>
 
           <div class="field col-12 mt-5">
-            <Button label="Sauvegarder" :disabled="submitted || v$.$invalid" type="submit"/>
+            <Button :label="$t('status.save')" :disabled="submitted || v$.$invalid" type="submit"/>
           </div>
         </form>
 
         <Divider/>
 
         <div class="grid p-fluid">
-          <div class="field text-center col-12 md:col-offset-4 md:col-4">
-            <label for="friendCode">Code d'ami</label>
+          <div class="field text-center col-12 md:col-offset-5 md:col-2">
+            <label for="friendCode">
+              {{ $t('misc.friend_code') }}
+            </label>
             <div class="p-inputgroup">
               <InputText v-model="friendCode" disabled/>
               <Button icon="pi pi-paperclip" @click="copyFriendCode"/>
@@ -57,7 +63,9 @@
           </div>
           <div class="field col-12 md:col-offset-4 md:col-4">
             <div class="flex flex-column text-center">
-              <span class="mb-2">Clé publique</span>
+              <span class="mb-2">
+                {{ $t('misc.public_key') }}
+              </span>
               <QrcodeVue :size="240" :value="publicKey"
                          class="align-self-center"/>
             </div>
@@ -73,10 +81,7 @@ import QrcodeVue from 'qrcode.vue';
 
 import { mapActions, mapGetters } from 'vuex';
 import { useVuelidate } from '@vuelidate/core';
-import {
-  alpha,
-  helpers,
-} from '@vuelidate/validators';
+import { alpha } from '@vuelidate/validators';
 
 export default {
   setup() {
@@ -96,10 +101,10 @@ export default {
   validations() {
     return {
       firstName: {
-        alpha: helpers.withMessage('Le prénom ne doit contenir que des lettres.', alpha),
+        alpha,
       },
       lastName: {
-        alpha: helpers.withMessage('Le nom ne doit contenir que des lettres.', alpha),
+        alpha,
       },
     };
   },
@@ -116,43 +121,46 @@ export default {
             navigator.clipboard.writeText(this.friendCode);
             this.$toast.add({
               severity: 'info',
-              summary: 'Copié',
-              detail: 'Code d\'ami copié dans le presse papier !',
-              life: 3000,
+              summary: this.$t('status.copied.title'),
+              detail: this.$t('status.copied.message.clipboard.success'),
+              life: 5000,
             });
             return;
           }
           this.$toast.add({
             severity: 'error',
-            summary: 'Impossible',
-            detail: 'Impossible de copier dans votre presse papier...',
-            life: 3000,
+            summary: this.$t('status.error.title'),
+            detail: this.$t('status.copied.message.clipboard.fail'),
+            life: 5000,
           });
         });
     },
     async handleSubmit(isFormValid) {
-      this.submitted = true;
-
       if (!isFormValid) return;
+      this.submitted = true;
 
       try {
         await this.UpdateUser(this.$data);
         this.$toast.add({
           severity: 'success',
-          summary: 'Sauvegardé',
-          detail: 'Changements sauvegardés avec succès !',
-          life: 3000,
+          summary: this.$t('status.saved.title'),
+          detail: this.$t('status.saved.message'),
+          life: 5000,
         });
         this.$router.push({ name: 'login' });
       } catch (error) {
         const { response } = error;
 
         if (response?.status !== 200) {
-          this.$toast.add({
-            severity: 'error',
-            summary: 'Erreur',
-            detail: 'Une erreur inconnue est survenue',
-            life: 3000,
+          Object.values(response.data).forEach((errors) => {
+            errors.forEach((message) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: this.$t('status.error.title'),
+                detail: message,
+                life: 5000,
+              });
+            });
           });
         }
       }

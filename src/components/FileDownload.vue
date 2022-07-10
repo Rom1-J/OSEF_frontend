@@ -30,7 +30,7 @@ export default {
           severity: 'error',
           summary: 'Erreur',
           detail: 'Propriétaire inconnu...',
-          life: 3000,
+          life: 5000,
         });
         return;
       }
@@ -57,7 +57,7 @@ export default {
           severity: 'error',
           summary: 'Erreur',
           detail: 'Impossible de télécharger ce fichier...',
-          life: 3000,
+          life: 5000,
         });
       }
     },

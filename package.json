@@ -6,7 +6,7 @@
 	"scripts": {
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",
-		"build:watch": "vue-cli-service build --watch",
+		"build:watch": "NODE_ENV=production vue-cli-service build --watch --mode development",
 		"lint": "vue-cli-service lint",
 		"test:unit": "vue-cli-service test:unit"
 	},
@@ -43,6 +43,7 @@
 		"tweetnacl": "^1.0.3",
 		"tweetnacl-util": "^0.15.1",
 		"vue": "^3.2.37",
+		"vue-i18n": "^9.1.10",
 		"vue-router": "^4.0.0-0",
 		"vuex": "^4.0.2",
 		"vuex-persistedstate": "^4.1.0"

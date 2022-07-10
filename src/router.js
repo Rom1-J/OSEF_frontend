@@ -16,16 +16,25 @@ const routes = [
         path: '/dashboard',
         name: 'dashboard',
         component: () => import('./pages/dashboard/categories/Home.vue'),
+        meta: {
+          requires_auth: true,
+        },
       },
       {
         path: '/dashboard/profile',
         name: 'profile',
         component: () => import('./pages/dashboard/categories/Profile.vue'),
+        meta: {
+          requires_auth: true,
+        },
       },
       {
         path: '/dashboard/:token',
         name: 'transaction',
         component: () => import('./pages/dashboard/categories/View.vue'),
+        meta: {
+          requires_auth: true,
+        },
       },
     ],
     meta: {

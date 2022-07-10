@@ -3,7 +3,7 @@
   min-h-screen min-w-screen overflow-hidden">
     <div class="grid justify-content-center p-2 lg:p-0" style="min-width:80%">
       <div class="col-12 mt-5 xl:mt-0 text-center">
-        <img src="layout/images/OSEF-logo.png" alt="OSEF logo" class="mb-5"
+        <img src="@/layout/images/OSEF-logo.png" alt="OSEF logo" class="mb-5"
              style="height:60px;">
       </div>
       <div class="col-12 xl:col-6 customBorder">
@@ -11,14 +11,16 @@
           <div class="grid flex-column align-items-center">
             <span class="text-blue-500 font-bold text-3xl">404</span>
             <h1 class="text-900 font-bold text-center text-3xl lg:text-5xl mb-2">
-              Il semblerait que vous vous soyez perdu
+              {{ $t('pages.notFound.title') }}
             </h1>
-            <span class="text-gray-600">La page demandée est introuvable.</span>
+            <span class="text-gray-600">
+              {{ $t('pages.notFound.description') }}
+            </span>
             <div class="col-12 mt-8 text-center">
               <i class="pi pi-fw pi-arrow-left text-blue-500 mr-2"
                  style="vertical-align:center;"></i>
               <router-link to="/" class="text-blue-500">
-                Retourner sur l'accueil
+                {{ $t('pages.notFound.goto') }}
               </router-link>
             </div>
           </div>

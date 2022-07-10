@@ -5,7 +5,7 @@
         <div class="flex justify-content-between mb-3">
           <div>
             <span
-                class="block text-500 font-medium mb-3">Fichiers envoyés</span>
+                class="block text-500 font-medium mb-3">{{ $t('misc.sent_files') }}</span>
             <span class="text-900 font-medium text-8xl">
               {{ getSentFiles() }}
             </span>
@@ -22,7 +22,7 @@
       <div class="card mb-0">
         <div class="flex justify-content-between mb-3">
           <div>
-            <span class="block text-500 font-medium mb-3">Fichiers reçus</span>
+            <span class="block text-500 font-medium mb-3">{{ $t('misc.received_files') }}</span>
             <span class="text-900 font-medium text-8xl">
               {{ getReceivedFiles() }}
             </span>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="col-12">
-      <FileTable title="Derniers échanges" :files="StateFiles?.all"></FileTable>
+      <FileTable :title="$t('status.exchange.last')" :files="StateFiles?.all"></FileTable>
     </div>
   </div>
 </template>

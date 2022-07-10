@@ -16,9 +16,9 @@
     <ul class="layout-topbar-menu hidden lg:flex origin-top lg:align-items-center">
       <li>
         <div class="p-inputgroup">
-          <InputText placeholder="Code d'ami" maxlength="6"
+          <InputText placeholder="Friend code" maxlength="6"
                      v-model="v$.inviteCode.$model"/>
-          <Button label="Inviter" type="submit"
+          <Button :label="$t('misc.invite')" type="submit"
                   :disabled="v$.inviteCode.$invalid || submitted"/>
         </div>
       </li>
@@ -26,14 +26,14 @@
         <router-link :to="{name: 'profile'}">
           <button class="p-link layout-topbar-button">
             <i class="pi pi-user"></i>
-            <span>Profile</span>
+            <span>{{ $t('misc.profile') }}</span>
           </button>
         </router-link>
       </li>
       <li>
         <Button @click="handleSubmit" class="p-link layout-topbar-button">
           <i class="pi pi-sign-out"></i>
-          <span>Se déconnecter</span>
+          <span>{{ $t('login.sign_out') }}</span>
         </Button>
       </li>
     </ul>
@@ -78,9 +78,9 @@ export default {
         await axios.post('/api/transactions/', { friend_code: this.inviteCode });
         this.$toast.add({
           severity: 'success',
-          summary: 'Envoyé',
-          detail: 'Demande envoyée avec succès !',
-          life: 3000,
+          summary: this.$t('status.sent.title'),
+          detail: this.$t('status.sent.message'),
+          life: 5000,
         });
         this.inviteCode = '';
       } catch (error) {
@@ -89,9 +89,9 @@ export default {
         if (response?.status !== 200) {
           this.$toast.add({
             severity: 'error',
-            summary: 'Erreur',
-            detail: 'Une erreur inconnue est survenue',
-            life: 3000,
+            summary: this.$t('status.error.title'),
+            detail: this.$t('status.error.message'),
+            life: 5000,
           });
         }
       }
@@ -101,9 +101,9 @@ export default {
       await this.LogOut();
       this.$toast.add({
         severity: 'success',
-        summary: 'Déconnexion',
-        detail: 'Vous avez été déconnecté avec succès !',
-        life: 3000,
+        summary: this.$t('status.disconnection.title'),
+        detail: this.$t('status.disconnection.message'),
+        life: 5000,
       });
 
       await this.$router.push({ name: 'login' });

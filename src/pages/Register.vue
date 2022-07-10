@@ -6,7 +6,7 @@
       <div class="col-12 mt-5 xl:mt-0 text-center">
         <router-link :to="{name: 'landing'}"
                      class="hover:underline">
-          <img src="layout/images/OSEF-logo.png" alt="Sakai logo" class="mb-5"
+          <img src="@/layout/images/OSEF-logo.png" alt="OSEF logo" class="mb-5"
                height="60">
         </router-link>
       </div>
@@ -18,13 +18,13 @@
              background: linear-gradient(180deg, var(--surface-50) 38.9%, var(--surface-0));">
           <div class="text-center mb-5">
             <div class="text-900 text-3xl font-medium">
-              Créer un compte
+              {{ $t('register.create_account') }}
             </div>
             <span class="text-600 font-medium">
-              Déjà inscrit ?
+              {{ $t('register.already_registered') }}
               <router-link :to="{name: 'login'}"
                            class="hover:underline">
-                connectez-vous
+                {{ $t('login.sign_in') }}
               </router-link>
             </span>
           </div>
@@ -35,13 +35,13 @@
               <label for="username"
                      :class="{'p-error':v$.username.$invalid && submitted}"
                      class="block text-900 text-xl font-medium mb-2">
-                Nom d'utilisateur*
+                {{ $t('fields.username') }}*
               </label>
 
               <InputText id="username" v-model="v$.username.$model"
                          :class="{'p-invalid':v$.username.$invalid && submitted}"
                          class="w-full" type="text"
-                         placeholder="Nom d'utilisateur"
+                         :placeholder="$t('fields.username')"
                          style="padding:1rem;"/>
               <ul class="p-0 mt-0 list-none"
                   v-if="(v$.username.$invalid && submitted) || v$.username.$pending.$response">
@@ -55,12 +55,12 @@
               <label for="email"
                      :class="{'p-error':v$.email.$invalid && submitted}"
                      class="block text-900 text-xl font-medium mb-2">
-                Adresse e-mail*
+                {{ $t('fields.email') }}*
               </label>
               <InputText id="email" v-model="v$.email.$model"
                          :class="{'p-invalid':v$.email.$invalid && submitted}"
                          class="w-full" type="email"
-                         placeholder="Adresse e-mail"
+                         :placeholder="$t('fields.email')"
                          style="padding:1rem;"/>
               <ul class="p-0 mt-0 list-none"
                   v-if="(v$.email.$invalid && submitted) || v$.email.$pending.$response">
@@ -77,10 +77,10 @@
               <label for="password1"
                      :class="{'p-error':v$.password1.$invalid && submitted}"
                      class="block text-900 font-medium text-xl mb-2">
-                Mot de passe*
+                {{ $t('fields.password') }}*
               </label>
               <Password id="password1" v-model="v$.password1.$model"
-                        placeholder="Mot de passe"
+                        :placeholder="$t('fields.password')"
                         :class="{'p-invalid':v$.password1.$invalid && submitted}"
                         toggleMask class="w-full"
                         inputClass="w-full"
@@ -98,10 +98,10 @@
               <label for="password2"
                      :class="{'p-error':v$.password2.$invalid && submitted}"
                      class="block text-900 font-medium text-xl mb-2">
-                Confirmer votre mot de passe*
+                {{ $t('fields.confirm_password') }}*
               </label>
               <Password id="password2" v-model="v$.password2.$model"
-                        placeholder="Confirmer votre mot de passe"
+                        :placeholder="$t('fields.confirm_password')"
                         :class="{'p-invalid':v$.password2.$invalid && submitted}"
                         :toggleMask="true" class="w-full"
                         inputClass="w-full"
@@ -126,11 +126,11 @@
                         :class="{'p-invalid':v$.accept.$invalid && submitted}"/>
               <label for="accept"
                      :class="{'p-error': v$.accept.$invalid && submitted}">
-                J'accepte les CGU*
+                {{ $t('fields.accept_tos') }}*
               </label>
             </div>
 
-            <Button type="submit" label="S'inscrire"
+            <Button type="submit" :label="$t('register.sign_up')"
                     class="w-full p-3 text-xl" :disabled="submitted"/>
           </form>
         </div>
@@ -140,9 +140,7 @@
 </template>
 
 <script>
-import {
-  email, helpers, required, sameAs,
-} from '@vuelidate/validators';
+import { email, required, sameAs } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import axios from 'axios';
 
@@ -163,18 +161,18 @@ export default {
   validations() {
     return {
       username: {
-        required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
+        required,
       },
       email: {
-        required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
-        email: helpers.withMessage('L\'adresse mail n\'est pas valide.', email),
+        required,
+        email,
       },
       password1: {
-        required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
+        required,
       },
       password2: {
-        required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
-        sameAsPassword: helpers.withMessage('Les mots de passes ne correspondent pas.', sameAs(this.password1)),
+        required,
+        sameAsPassword: sameAs(this.password1),
       },
       accept: {
         required,
@@ -183,17 +181,16 @@ export default {
   },
   methods: {
     async handleSubmit(isFormValid) {
-      this.submitted = true;
-
       if (!isFormValid) return;
+      this.submitted = true;
 
       try {
         await axios.post('/api/accounts/registration/', this.$data);
         this.$toast.add({
           severity: 'info',
-          summary: 'Confirmation',
-          detail: 'Votre compte a été crée, veuillez valider votre adresse mail.',
-          life: 3000,
+          summary: this.$t('status.confirmation'),
+          detail: this.$t('register.success_creation'),
+          life: 5000,
         });
         await this.$router.push({ name: 'login' });
       } catch (error) {
@@ -204,9 +201,9 @@ export default {
             errors.forEach((message) => {
               this.$toast.add({
                 severity: 'error',
-                summary: 'Erreur',
+                summary: this.$t('status.error.title'),
                 detail: message,
-                life: 3000,
+                life: 5000,
               });
             });
           });

@@ -58,9 +58,9 @@ export default {
             await this.LoadFiles({ force: true });
             this.$toast.add({
               severity: 'info',
-              summary: 'Terminé!',
-              detail: 'Fichier envoyé avec succès!',
-              life: 3000,
+              summary: this.$t('status.sent.title'),
+              detail: this.$t('status.sent.message'),
+              life: 5000,
             });
             this.$refs.fileUpload.clear();
             this.$refs.fileUpload.uploadedFileCount = 0;
@@ -69,9 +69,9 @@ export default {
 
           this.$toast.add({
             severity: 'error',
-            summary: 'Erreur',
-            detail: 'Une erreur est survenue, contactez l\'administrateur...',
-            life: 3000,
+            summary: this.$t('status.error.title'),
+            detail: this.$t('status.error.message'),
+            life: 5000,
           });
         },
       );

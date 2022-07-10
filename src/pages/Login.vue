@@ -6,7 +6,7 @@
       <div class="col-12 mt-5 xl:mt-0 text-center">
         <router-link :to="{name: 'landing'}"
                      class="hover:underline">
-          <img src="@/layout/images/OSEF-logo.png" alt="Sakai logo" class="mb-5"
+          <img src="@/layout/images/OSEF-logo.png" alt="OSEF logo" class="mb-5"
                height="60">
         </router-link>
       </div>
@@ -18,13 +18,13 @@
              background: linear-gradient(180deg, var(--surface-50) 38.9%, var(--surface-0));">
           <div class="text-center mb-5">
             <div class="text-900 text-3xl font-medium">
-              Se connecter
+              {{ $t('login.sign_in') }}
             </div>
             <span class="text-600 font-medium">
-              Pas inscrit ?
+              {{ $t('login.not_registered') }}
               <router-link :to="{name: 'register'}"
                            class="hover:underline">
-                inscrivez-vous
+                {{ $t('register.sign_up') }}
               </router-link>
             </span>
           </div>
@@ -32,23 +32,20 @@
           <form @submit.prevent="handleSubmit(!v$.$invalid)"
                 class="w-full md:w-10 mx-auto">
             <div class="field">
-              <label for="email"
-                     :class="{'p-error':v$.email.$invalid && submitted}"
+              <label for="username"
+                     :class="{'p-error':v$.username.$invalid && submitted}"
                      class="block text-900 text-xl font-medium mb-2">
-                Adresse e-mail
+                {{ $t('fields.email_or_username') }}
               </label>
-              <InputText id="email" v-model="v$.email.$model"
-                         :class="{'p-invalid':v$.email.$invalid && submitted}"
-                         class="w-full" type="email"
-                         placeholder="Adresse e-mail"
+              <InputText id="username" v-model="v$.username.$model"
+                         :class="{'p-invalid':v$.username.$invalid && submitted}"
+                         class="w-full"
+                         :placeholder="$t('fields.email_or_username')"
                          style="padding:1rem;"/>
               <ul class="p-0 mt-0 list-none"
-                  v-if="(v$.email.$invalid && submitted) || v$.email.$pending.$response">
-                <li v-if="v$.email.required.$invalid" class="p-error">
-                  {{ v$.email.required.$message }}
-                </li>
-                <li v-if="v$.email.email.$invalid" class="p-error">
-                  {{ v$.email.email.$message }}
+                  v-if="(v$.username.$invalid && submitted) || v$.username.$pending.$response">
+                <li v-if="v$.username.required.$invalid" class="p-error">
+                  {{ v$.username.required.$message }}
                 </li>
               </ul>
             </div>
@@ -57,10 +54,10 @@
               <label for="password"
                      :class="{'p-error':v$.password.$invalid && submitted}"
                      class="block text-900 font-medium text-xl mb-2">
-                Mot de passe
+                {{ $t('fields.password') }}
               </label>
               <Password id="password" v-model="v$.password.$model"
-                        placeholder="Mot de passe"
+                        :placeholder="$t('fields.password')"
                         :class="{'p-invalid':v$.password.$invalid && submitted}"
                         toggleMask :feedback="false" class="w-full"
                         inputClass="w-full"
@@ -76,7 +73,7 @@
 
             <div class="flex align-items-center justify-content-between mb-5">
               <a class="font-medium no-underline ml-2 text-right cursor-pointer hover:underline">
-                Mot de passe oublié ?
+                {{ $t('fields.forgot_password') }}
               </a>
             </div>
             <Button type="submit" label="Sign In"
@@ -90,7 +87,7 @@
 
 <script>
 import { useVuelidate } from '@vuelidate/core';
-import { email, helpers, required } from '@vuelidate/validators';
+import { required } from '@vuelidate/validators';
 import { mapActions } from 'vuex';
 
 export default {
@@ -99,36 +96,33 @@ export default {
   },
   data() {
     return {
-      email: '',
+      username: '',
       password: '',
-      remember: false,
       submitted: false,
     };
   },
   validations() {
     return {
-      email: {
-        required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
-        email: helpers.withMessage('L\'adresse mail n\'est pas valide.', email),
+      username: {
+        required,
       },
       password: {
-        required: helpers.withMessage('Ce champs ne doit pas être vide.', required),
+        required,
       },
     };
   },
   methods: {
     ...mapActions(['LogIn']),
     async handleSubmit(isFormValid) {
-      this.submitted = true;
-
       if (!isFormValid) return;
+      this.submitted = true;
 
       try {
         await this.LogIn(this.$data);
         this.$toast.add({
           severity: 'info',
-          summary: 'Chargement',
-          detail: 'Génération des clés...',
+          summary: this.$t('status.loading.title'),
+          detail: this.$t('info.key_generation'),
           life: 5000,
         });
         await this.$router.push({ name: 'dashboard' });
@@ -136,14 +130,20 @@ export default {
         const { response } = error;
 
         if (response?.status !== 200) {
-          this.$toast.add({
-            severity: 'error',
-            summary: 'Erreur',
-            detail: 'Mot de passe ou e-mail incorrect',
-            life: 3000,
+          Object.values(response.data).forEach((errors) => {
+            errors.forEach((message) => {
+              this.$toast.add({
+                severity: 'error',
+                summary: this.$t('status.error.title'),
+                detail: message,
+                life: 5000,
+              });
+            });
           });
         }
       }
+
+      this.submitted = false;
     },
   },
 };

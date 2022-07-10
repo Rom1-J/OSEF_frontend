@@ -4,24 +4,22 @@
       <div class="card">
         <div class="flex justify-content-between flex-row align-items-center">
           <span class="text-2xl">{{ transaction?.external.username }}</span>
-          <Button label="Supprimer" class="p-button-danger"
+          <Button :label="$t('status.delete.title')" class="p-button-danger"
                   @click="displayConfirmation = true" disabled/>
-          <Dialog header="Confirmation" v-model:visible="displayConfirmation"
+          <Dialog :header="$t('status.confirm.title')" v-model:visible="displayConfirmation"
                   :style="{width: '350px'}" :modal="true">
             <div class="flex align-items-center justify-content-center">
               <i class="pi pi-exclamation-triangle mr-3"
                  style="font-size: 2rem"/>
               <span>
-                Êtes-vous sûr(e) de vouloir retirer
-                <b>{{ transaction?.external.username }}</b>
-                de vos contacts ?
+                {{ $t('misc.confirm.messages.contact', {msg: transaction?.external.username }) }}
               </span>
             </div>
             <template #footer>
-              <Button label="Non" icon="pi pi-times"
+              <Button :label="$t('status.no')" icon="pi pi-times"
                       @click="displayConfirmation = false"
                       class="p-button-text"/>
-              <Button label="Oui" icon="pi pi-check"
+              <Button :label="$t('status.yes')" icon="pi pi-check"
                       @click="deleteTransaction" class="p-button-text"/>
             </template>
           </Dialog>
@@ -33,7 +31,7 @@
     </div>
 
     <div class="col-12">
-      <FileTable title="Derniers échanges" :files="StateFiles[token]"></FileTable>
+      <FileTable title="Last exchanges" :files="StateFiles[token]"></FileTable>
     </div>
   </div>
 </template>
@@ -67,9 +65,9 @@ export default {
         .then(() => {
           this.$toast.add({
             severity: 'success',
-            summary: 'Suppression terminée',
-            detail: 'Ce contact a été supprimé de vos relations avec succès !',
-            life: 3000,
+            summary: this.$t('status.delete.completed'),
+            detail: this.$t('status.delete.messages.contact'),
+            life: 5000,
           });
         });
     },
