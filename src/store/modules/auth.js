@@ -125,10 +125,13 @@ export default {
       await commit('setUser', userData);
     },
 
-    async UpdatePublicKey({ getters }) {
-      await axios.put('/api/users/pubkey/', {
-        pub_key: getters.StateKey.publicKey,
-      });
+    async UpdatePublicKey({ commit, getters }) {
+      const data = {
+        pub_key: getters.StateKeys.publicKey,
+      };
+
+      await axios.patch('/api/accounts/user/', data);
+      await commit('setUser', { ...getters.StateUser, ...data });
     },
 
     async UpdateUser({ commit, getters }, form) {

@@ -11,7 +11,7 @@
             {{ title }}
             <span class="text-color-secondary">
               ({{ files?.length }}
-              {{ $tc('misc.file', files?.length) }})
+              {{ $tc('misc.file', files?.length === 0) }})
             </span>
           </h5>
           <div class="mb-2">

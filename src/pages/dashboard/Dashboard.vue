@@ -132,7 +132,7 @@ export default {
     await this.LoadTransactions();
     await this.LoadFiles();
 
-    if (this.StateTransactions) {
+    if (this.StateTransactions?.length > 0) {
       this.menu[1].items = [];
 
       this.StateTransactions.forEach((el) => {
