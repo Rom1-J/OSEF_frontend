@@ -29,6 +29,14 @@ const routes = [
         },
       },
       {
+        path: '/dashboard/notification',
+        name: 'notification',
+        component: () => import('./pages/dashboard/categories/Notification.vue'),
+        meta: {
+          requires_auth: true,
+        },
+      },
+      {
         path: '/dashboard/:token',
         name: 'transaction',
         component: () => import('./pages/dashboard/categories/View.vue'),

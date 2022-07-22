@@ -23,8 +23,18 @@
         </div>
       </li>
       <li>
-        <router-link :to="{name: 'profile'}">
-          <button class="p-link layout-topbar-button">
+        <router-link :to="{name: 'notification'}" v-slot="{ isActive, navigate }">
+          <button :class="{'text-primary': isActive}" @click="navigate"
+                  class="p-link layout-topbar-button">
+            <i class="pi pi-envelope"></i>
+            <span>{{ $t('misc.notification') }}</span>
+          </button>
+        </router-link>
+      </li>
+      <li>
+        <router-link :to="{name: 'profile'}" v-slot="{ isActive, navigate }">
+          <button :class="{'text-primary': isActive}" @click="navigate"
+                  class="p-link layout-topbar-button">
             <i class="pi pi-user"></i>
             <span>{{ $t('misc.profile') }}</span>
           </button>
@@ -71,8 +81,8 @@ export default {
       this.$emit('menu-toggle', event);
     },
     async invite(isFormValid) {
-      this.submitted = true;
       if (!isFormValid) return;
+      this.submitted = true;
 
       try {
         await axios.post('/api/transactions/', { friend_code: this.inviteCode });

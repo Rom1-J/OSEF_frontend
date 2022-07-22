@@ -28,8 +28,8 @@ export default {
       } else {
         this.$toast.add({
           severity: 'error',
-          summary: 'Erreur',
-          detail: 'Propriétaire inconnu...',
+          summary: this.$t('status.error.title'),
+          detail: this.$t('status.error.message'),
           life: 5000,
         });
         return;
@@ -55,8 +55,8 @@ export default {
       } else {
         this.$toast.add({
           severity: 'error',
-          summary: 'Erreur',
-          detail: 'Impossible de télécharger ce fichier...',
+          summary: this.$t('status.error.title'),
+          detail: this.$t('status.error.message'),
           life: 5000,
         });
       }

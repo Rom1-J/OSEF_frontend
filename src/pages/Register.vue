@@ -198,7 +198,9 @@ export default {
 
         if (response?.status !== 200) {
           Object.values(response.data).forEach((errors) => {
-            errors.forEach((message) => {
+            const iter = Array.isArray(errors) ? errors : [errors];
+
+            iter.forEach((message) => {
               this.$toast.add({
                 severity: 'error',
                 summary: this.$t('status.error.title'),

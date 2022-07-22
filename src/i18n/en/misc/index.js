@@ -46,6 +46,7 @@ const misc = {
   friend_code: 'Friend code',
   public_key: 'Public key',
   file: 'File | Files',
+  notification: 'Notification | Notifications',
 };
 
 export default misc;

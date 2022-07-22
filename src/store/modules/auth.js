@@ -8,12 +8,14 @@ export default {
     keys: null,
     transactions: null,
     files: { all: [] },
+    notifications: [],
   },
   getters: {
     isAuthenticated: (state) => !!state.user,
     StateUser: (state) => state.user,
     StateTransactions: (state) => state.transactions,
     StateFiles: (state) => state.files,
+    StateNotifications: (state) => state.notifications,
     StateKey: (state) => state.key,
     StateKeys: (state) => state.keys,
     GetTransaction: (state) => (token) => {
@@ -114,6 +116,22 @@ export default {
       );
     },
 
+    async LoadNotifications({ commit, getters }) {
+      const req = await axios.get(
+        '/api/notifications/',
+        {
+          headers: {
+            Authorization: `token ${getters.StateKey}`,
+          },
+        },
+      );
+
+      console.log(req);
+
+      // noinspection JSUnresolvedVariable
+      await commit('setNotifications', []);
+    },
+
     async LoadKeys({ commit, getters }) {
       if (getters.StateKey === null) return;
 
@@ -130,7 +148,7 @@ export default {
         pub_key: getters.StateKeys.publicKey,
       };
 
-      await axios.patch('/api/accounts/user/', data);
+      await axios.patch(getters.StateUser.url, data);
       await commit('setUser', { ...getters.StateUser, ...data });
     },
 
@@ -159,6 +177,9 @@ export default {
     },
     setFiles(state, data) {
       state.files = data;
+    },
+    setNotifications(state, data) {
+      state.notifications = data;
     },
     logout(state) {
       state.key = null;

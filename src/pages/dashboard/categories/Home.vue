@@ -37,7 +37,7 @@
     </div>
 
     <div class="col-12">
-      <FileTable :title="$t('status.exchange.last')" :files="StateFiles?.all"></FileTable>
+      <FileTable :title="$t('status.exchange.last')" :files="StateFiles?.all" />
     </div>
   </div>
 </template>

@@ -58,6 +58,11 @@ const status = {
     empty: 'No exchange...',
     last: 'Last exchanges',
   },
+  notification: {
+    title: 'Notification',
+    empty: 'No notification...',
+    last: 'Last notifications',
+  },
   no_result: 'No result...',
 };
 
