@@ -41,7 +41,7 @@
       <Column field="date" :header="$t('fields.date')"
               style="width:25%" :sortable="true">
         <template #body="{data}">
-          <span>{{ formatDate(data.creation_date) }}</span>
+          <span>{{ formatDate(data.created_at) }}</span>
         </template>
       </Column>
       <Column style="width:5%">

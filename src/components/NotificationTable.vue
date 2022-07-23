@@ -22,31 +22,26 @@
     <DataTable :value="notifications" :rows="50" :paginator="true"
                responsiveLayout="scroll" class="p-datatable-gridlines"
                :rowHover="true" v-model:filters="filters" :filters="filters"
-               :globalFilterFields="['filename']">
+               :globalFilterFields="['type', 'emitter']">
       <template #loading>
         {{ $t('status.loading.messages.notifications') }}
       </template>
       <template #empty>
         {{ $t('status.no_result') }}
       </template>
-      <Column field="filename" :header="$t('fields.file')"
-              style="width:30%" :sortable="true">
+      <Column field="type" :header="$t('fields.type')"
+              style="width:37.5%" :sortable="true">
       </Column>
-      <Column field="owner" :header="$t('fields.owner')"
-              style="width:20%" :sortable="true">
+      <Column field="emitter" :header="$t('fields.emitter')"
+              style="width:37.5%" :sortable="true">
       </Column>
-      <Column field="receiver" :header="$t('fields.receiver')"
-              style="width:20%" :sortable="true">
+      <Column field="read" :header="$t('fields.read')"
+              style="width:12.5%" :sortable="true">
       </Column>
       <Column field="date" :header="$t('fields.date')"
-              style="width:25%" :sortable="true">
+              style="width:12.5%" :sortable="true">
         <template #body="{data}">
-          <span>{{ formatDate(data.creation_date) }}</span>
-        </template>
-      </Column>
-      <Column style="width:5%">
-        <template #body="{data}">
-          <FileDownload :file="data"/>
+          <span>{{ formatDate(data.created_at) }}</span>
         </template>
       </Column>
     </DataTable>
@@ -54,7 +49,6 @@
 </template>
 <script>
 import { FilterMatchMode } from 'primevue/api';
-import FileDownload from '@/components/FileDownload.vue';
 import moment from 'moment';
 import { mapActions } from 'vuex';
 
@@ -68,9 +62,6 @@ export default {
       },
     };
   },
-  components: {
-    FileDownload,
-  },
   methods: {
     ...mapActions(['LoadNotifications']),
     formatDate(date) {
@@ -78,7 +69,7 @@ export default {
     },
     async refreshNotifications() {
       this.refreshing = true;
-      await this.LoadNotifications({ force: true });
+      await this.LoadNotifications();
       this.refreshing = false;
     },
   },

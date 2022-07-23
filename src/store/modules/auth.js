@@ -71,7 +71,7 @@ export default {
       // noinspection JSUnresolvedVariable
       await commit(
         'setTransactions',
-        req.data.sort((a, b) => (new Date(a.modification_date)) - (new Date(b.modification_date))),
+        req.data.sort((a, b) => (new Date(a.updated_at)) - (new Date(b.updated_at))),
       );
     },
 
@@ -97,7 +97,7 @@ export default {
       );
 
       const data = req.data.sort(
-        (a, b) => (new Date(b.creation_date)) - (new Date(a.creation_date)),
+        (a, b) => (new Date(b.created_at)) - (new Date(a.created_at)),
       );
 
       const filtered = {};
@@ -126,10 +126,8 @@ export default {
         },
       );
 
-      console.log(req);
-
       // noinspection JSUnresolvedVariable
-      await commit('setNotifications', []);
+      await commit('setNotifications', req.data);
     },
 
     async LoadKeys({ commit, getters }) {

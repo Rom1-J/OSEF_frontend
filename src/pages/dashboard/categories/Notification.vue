@@ -1,7 +1,7 @@
 <template>
   <div class="grid">
     <div class="col-12">
-      <NotificationTable :notifications="StateNotifications?.all"/>
+      <NotificationTable :notifications="StateNotifications"/>
     </div>
   </div>
 </template>

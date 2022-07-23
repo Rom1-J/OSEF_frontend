@@ -13,6 +13,9 @@ const fields = {
   owner: 'Owner',
   receiver: 'Receiver',
   date: 'Date',
+  type: 'Type',
+  emitter: 'Emitter',
+  read: 'Read',
 };
 
 export default fields;
